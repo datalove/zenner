@@ -99,3 +99,14 @@ create_connection <- function(email_id, access_token = NULL, password = NULL) {
 }
 
 
+#' Takes a list of pages and combines it into a single piece of json
+#'
+#' @param pages list of json from individual pages
+#'
+#' @return json array of paginated json objects
+#'
+combine_json_pages <- function(pages) {
+  pages %>%
+    paste0(collapse = ',') %>%
+    paste0('[', ., ']')
+}
