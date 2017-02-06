@@ -1,7 +1,5 @@
 #' Sends a query to Zendesk and automatically paginates the results
 #'
-#' @param access_token A Zendesk access token
-#' @param email_id Email address of admin account to query using
 #' @param query List of query parameters for the edge
 #' @param url API edge to query
 #' @param page_limit Number of pages to query
@@ -29,10 +27,8 @@
 
 #'
 #'
-get_response <- function(access_token, email_id, url, query = list(), page_limit = Inf, parsing = 'R') {
-
-  # set up authentication
-  auth <- authenticate(paste0(email_id,'/token'), access_token)
+# get_response <- function(access_token, email_id, url, query = list(), page_limit = Inf, parsing = 'R') {
+get_response <- function(connection, url, query = list(), page_limit = Inf, parsing = 'R') {
 
   # set up pagination
   page <- 1
@@ -41,7 +37,7 @@ get_response <- function(access_token, email_id, url, query = list(), page_limit
   message('Page ', page,': ', modify_url(url, query = query), '\n')
 
   # get first response
-  resp <- GET(url = url, auth, query = query)
+  resp <- GET(url = url, connection, query = query)
 
   # stop and spit out error if necessary
   stop_for_status(resp)
@@ -64,7 +60,7 @@ get_response <- function(access_token, email_id, url, query = list(), page_limit
 
     next_page <- content(resp)[['next_page']]
     message('Page ', page,': ', next_page, "\n")
-    resp <-  GET(next_page, auth)
+    resp <-  GET(next_page, connection)
     stop_for_status(resp)
 
     contents[[page]] <- content(resp, as = type)
@@ -75,4 +71,31 @@ get_response <- function(access_token, email_id, url, query = list(), page_limit
   contents
 
 }
+
+
+
+#' Create an authtenication object to connect to Zendesk
+#'
+#' @param email_id An email_id for an account admin in Zendesk. Required paramter.
+#' @param access_token An access token for the Zendesk API. If access_token is null, a password must be supplied.
+#' @param password The password for the email_id. If password is null, an access_token must be supplied.
+#'
+#' @return
+#' @export
+#'
+create_connection <- function(email_id, access_token = NULL, password = NULL) {
+
+  if(is.null(access_token) && is.null(password))
+    stop("One of 'access_token' or 'password' must not be null")
+
+  if(!is.null(access_token)) {
+    auth <- authenticate(paste0(email_id,'/token'), access_token)
+  } else {
+    auth <- authenticate(email_id, password)
+  }
+
+  auth
+
+}
+
 

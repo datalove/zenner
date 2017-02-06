@@ -1,18 +1,16 @@
-
 #' Get a list of tickets from Zendesk that changed from a particular start time
 #'
-#' @param access_token A Zendesk access token
-#' @param email_id Email address of admin account to query using
+#' @param connection An connection created by the create_connection function
 #' @param start_time A Date or POSIXCT datetime
 #'
 #' @return a dataframe of tickets
 #' @export
 #'
-get_tickets_incremental <- function(access_token, email_id, start_time) {
+# get_tickets_incremental <- function(access_token, email_id, start_time) {
+get_tickets_incremental <- function(connection, start_time) {
 
   resp <- get_response(
-    access_token = access_token,
-    email_id     = email_id,
+    connection   = connection,
     url          = 'https://chumbacasino.zendesk.com/api/v2/incremental/tickets.json',
     query        = list(start_time = as.character(as.integer(start_time))),#, include = 'users, groups, organizations'),
     parsing      = 'JSON'
@@ -62,18 +60,17 @@ get_tickets_incremental <- function(access_token, email_id, start_time) {
 
 #' Get a list of users from Zendesk that changed from a particular start time
 #'
-#' @param access_token A Zendesk access token
-#' @param email_id Email address of admin account to query using
+#' @param connection An connection created by the create_connection function
 #' @param start_time A Date or POSIXCT datetime
 #'
 #' @return a dataframe of users
 #' @export
 #'
-get_users_incremental <- function(access_token, email_id, start_time) {
+get_users_incremental <- function(connection, email_id, start_time) {
 
   resp <- get_response(
-    access_token = access_token,
-    email_id     = email_id,
+
+    connection   = connection,
     url          = 'https://chumbacasino.zendesk.com/api/v2/incremental/users.json',
     query        = list(start_time = as.character(as.integer(start_time))),
     parsing      = 'JSON'

@@ -4,12 +4,10 @@
 \alias{get_tickets_incremental}
 \title{Get a list of tickets from Zendesk that changed from a particular start time}
 \usage{
-get_tickets_incremental(access_token, email_id, start_time)
+get_tickets_incremental(connection, start_time)
 }
 \arguments{
-\item{access_token}{A Zendesk access token}
-
-\item{email_id}{Email address of admin account to query using}
+\item{connection}{An connection created by the create_connection function}
 
 \item{start_time}{A Date or POSIXCT datetime}
 }

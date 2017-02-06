@@ -4,14 +4,10 @@
 \alias{get_response}
 \title{Sends a query to Zendesk and automatically paginates the results}
 \usage{
-get_response(access_token, email_id, url, query = list(), page_limit = Inf,
+get_response(connection, url, query = list(), page_limit = Inf,
   parsing = "R")
 }
 \arguments{
-\item{access_token}{A Zendesk access token}
-
-\item{email_id}{Email address of admin account to query using}
-
 \item{url}{API edge to query}
 
 \item{query}{List of query parameters for the edge}
